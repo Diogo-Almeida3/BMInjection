@@ -1,0 +1,20 @@
+
+# sudo docker-compose -f deploy/docker-compose.yml  up
+version: "3"
+services:
+    db:
+        image: mysql:8.0.21
+        container_name: mysql-db
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - /db/entry:/docker-entrypoint-initdb.d/:ro
+            - /db/data:/var/lib/mysql
+    app:
+        image: flask-app
+        container_name: app-backend
+        build:
+            context: .
+            dockerfile: Dockerfile.app
+            depends_on:
+                - db
