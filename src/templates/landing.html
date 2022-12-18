@@ -2,5 +2,44 @@
 
 {% block content %}
 
-    <h1>This Landing Page</h1>
+<div style="height: 100vh;" class="container d-flex flex-column justify-content-evenly text-center">
+    <div class="row">
+      <div class="col">
+        <h1 class="h3 text-gray-900 mb-4">Calculate your BMI</h1>
+      </div>
+    </div>
+    <div class="d-flex flex-row justify-content-center text-start">
+        <!-- <div class="col"> -->
+            <form method="POST">
+                <div class="col mb-4">
+                    <label for="reference" class="form-label">Reference:</label>
+                    <input type="text" class="form-control form-control-user"
+                    id="reference" aria-describedby="referenceHelp"
+                    name="reference" placeholder="Ex: Name, date, ...">
+                </div>
+                <div class="col mb-2">
+                    <label for="height" class="form-label">Height:</label>
+                    <input type="number" step=".01" class="form-control form-control-user"
+                        id="height" aria-describedby="heightHelp"
+                        name="height" placeholder="in m || ex: 1.82">
+                </div>
+                <div class="col mb-4">
+                    <label for="weight" class="form-label">Weight:</label>
+                    <input type="number" step=".1" class="form-control"
+                        id="weight" aria-describedby="weightHelp"
+                        name="weight" placeholder="in Kg || ex: 79">
+                </div>
+                <div class="col-xs-1 center-block">
+                    <button type="submit" class="btn btn-primary btn-user btn-block">
+                        Calculate
+                    </button>
+                </div>
+            </form>
+        <!-- </div> -->
+    </div>
+    <div class="row">
+        <h1 class="h5 text-gray-600 mb-4">{{ref}} BMI is: {{bmi}}</h1>
+
+    </div>
+  </div>
 {% endblock %}
