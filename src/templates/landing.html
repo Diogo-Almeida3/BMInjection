@@ -38,8 +38,9 @@
         <!-- </div> -->
     </div>
     <div class="row">
+        {% autoescape false %}
         <h1 class="h5 text-gray-600 mb-4">{{ref}} BMI is: {{bmi}}</h1>
-
+        {% endautoescape %}
     </div>
   </div>
 {% endblock %}
