@@ -15,7 +15,7 @@ def flag():
         flash('please login!', category='error')
         return redirect(url_for('login'))
     flag = []
-    with open("../flag.txt") as f:
+    with open("/flag.txt") as f:
         flag = f.read()
     return flag
 
@@ -27,7 +27,6 @@ def landing():
         return redirect(url_for('login'))
 
     if request.method == "POST":
-        ref = request.form.get("reference")
         hght = request.form.get("height")
         wght = request.form.get("weight")
 
@@ -39,10 +38,9 @@ def landing():
         except Exception as e:
             print(e, flush=True)
             pass
-    else:
-        ref = None
-        bmi = None
-    return render_template("landing.html", ref=ref, bmi=bmi)
+        return render_template("landing.html", bmi=bmi)
+    bmi = None
+    return render_template("landing.html", bmi=bmi)
 
 @app.route("/", methods=["POST", "GET"])
 def login():
@@ -56,7 +54,7 @@ def login():
 
         if user and user_id is not None:
             cook = hashlib.sha256((email+str(user_id)).encode('utf-8')).hexdigest()
-            resp = make_response(render_template("landing.html"))
+            resp = make_response(redirect(url_for("landing")))
             # set cookie
             resp.set_cookie("cookie", cook)
             return resp
