@@ -29,22 +29,26 @@ def insert_db(query, args=(), one=False):
         return False
     return True
 
-def login(name, email, password):
+def login(email, password):
     user = []
-    user = query_db('SELECT email FROM USERS WHERE email = %s', (email, ), one=True)
+    user = query_db('SELECT id, email FROM USERS WHERE email = %s', (email, ), one=True)
+    # print("user", user, flush=True)
     if user:
-        email = user[0][0]
+        email = user[0][1]
+        id = user[0][0]
+        # print("email", email, flush=True)
+        # print("id", id, flush=True)
         pass_check = query_db('SELECT * FROM USERS WHERE email = %s AND %s', (email, password), one=True)
 
         if pass_check:
             flash('Logged in successfully!', category='success')
-            return True
+            return True, id
         else:
             flash('Wrong credentials, try again...', category='error')
-            return False
+            return False, None
     else:
         flash('Wrong credentials, try again...', category='error')
-        return False
+        return False, None
 
 def register(name, email, password):
     result = query_db('SELECT * FROM USERS WHERE email = %s', (email, ), one=True)

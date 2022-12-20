@@ -1,9 +1,31 @@
+
 from app import app
+from flask import render_template, request, url_for, redirect, make_response, flash
+from werkzeug.routing import RequestRedirect
+from flask import session
 import database
-from flask import render_template, request, url_for, redirect
+import hashlib
+
+
+@app.route("/flag", methods=["GET"])
+def flag():
+    # verify cookie
+    cookie = request.cookies.get("cookie")
+    if cookie == None:
+        flash('please login!', category='error')
+        return redirect(url_for('login'))
+    flag = []
+    with open("../flag.txt") as f:
+        flag = f.read()
+    return flag
 
 @app.route("/landing", methods=["GET", "POST"])
 def landing():
+    cookie = request.cookies.get("cookie")
+    if cookie == None:
+        flash('please login!', category='error')
+        return redirect(url_for('login'))
+
     if request.method == "POST":
         ref = request.form.get("reference")
         hght = request.form.get("height")
@@ -25,14 +47,19 @@ def landing():
 @app.route("/", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
-        name = request.form.get("name")
         email = request.form.get("email")
         password = request.form.get("password")
 
-        user = database.login(name, email, password)
+        user, user_id = database.login(email, password)
+        print("user", user, flush=True)
+        print("user_id", user_id, flush=True)
 
-        if user:
-            return redirect(url_for('landing'))
+        if user and user_id is not None:
+            cook = hashlib.sha256((email+str(user_id)).encode('utf-8')).hexdigest()
+            resp = make_response(render_template("landing.html"))
+            # set cookie
+            resp.set_cookie("cookie", cook)
+            return resp
         else:
             return render_template("login.html")
     
